@@ -218,7 +218,7 @@
     <string name="gpx_marker_saved">Marcador guardado</string>
     <string name="gpx_deleted">Eliminado</string>
     <string name="gpx_map_gpx_uses_maplibre_vector_tiles_online_and_op">Map/GPX utiliza teselas vectoriales de MapLibre (en línea) y paquetes de regiones fuera de línea opcionales. La búsqueda/OSRM/límites necesita Internet del teléfono antes que Wi‑Fi para la moto. Tablero: Fin / Aparcamiento / Recalcular, LÍMITE, Rumbo / Norte, zoom, inclinación 3D.</string>
-    <string name="hud_start_android_auto_and_connect_to_your_bike_to_s">Inicia Android Auto y conéctate a tu moto para ver aquí el tablero.\n\nO toca Mapa para una vista previa en el teléfono, sin la moto.</string>
+    <string name="hud_start_android_auto_and_connect_to_your_bike_to_s">Inicia Android Auto para ver aquí el tablero. Conéctate a la moto o usa la vista previa local sin moto.</string>
     <string name="hud_str">✕</string>
     <string name="hud_dash_view">Vista de tablero</string>
     <string name="hud_hub">Centro</string>
@@ -231,6 +231,9 @@
     <string name="main_ready">Listo</string>
     <string name="main_no_bike_paired_yet">Ninguna moto emparejada todavía</string>
     <string name="main_connect">Conectar</string>
+    <string name="main_local_preview">Probar Android Auto sin moto</string>
+    <string name="main_local_preview_detail">Vista previa local, sin conexión a la moto</string>
+    <string name="main_local_preview_failed">Android Auto no inició; revisa Android Auto y los registros.</string>
     <string name="main_scan">Escanear</string>
     <string name="main_mirror">Espejo</string>
     <string name="main_stop">Detener</string>

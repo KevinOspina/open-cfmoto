@@ -234,7 +234,7 @@
     <string name="gpx_marker_saved">Marker saved</string>
     <string name="gpx_deleted">Deleted</string>
     <string name="gpx_map_gpx_uses_maplibre_vector_tiles_online_and_op">Map / GPX uses MapLibre vector tiles (online) and optional offline region packs. Search/OSRM/limits need phone internet before bike Wi‑Fi. Dash: End / Park / Recalc, LIMIT, Heading / North, zoom, 3D pitch.</string>
-    <string name="hud_start_android_auto_and_connect_to_your_bike_to_s">Start Android Auto and connect to your bike to see the dash here.\n\nOr tap Map for a phone preview without the bike.</string>
+    <string name="hud_start_android_auto_and_connect_to_your_bike_to_s">Start Android Auto to see the dash here. Connect to your bike, or use local preview without the bike.</string>
     <string name="hud_str">✕</string>
     <string name="hud_dash_view">Dash view</string>
     <string name="hud_hub">Hub</string>
@@ -247,6 +247,9 @@
     <string name="main_ready">Ready</string>
     <string name="main_no_bike_paired_yet">No bike paired yet</string>
     <string name="main_connect">Connect</string>
+    <string name="main_local_preview">Preview Android Auto without bike</string>
+    <string name="main_local_preview_detail">Local preview — no bike connection</string>
+    <string name="main_local_preview_failed">Android Auto did not start; check Android Auto and logs.</string>
     <string name="main_scan">Scan</string>
     <string name="main_mirror">Mirror</string>
     <string name="main_stop">Stop</string>

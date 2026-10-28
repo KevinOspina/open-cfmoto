@@ -138,6 +138,14 @@
                 android:layout_marginTop="16dp"
                 android:text="@string/main_connect" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_local_preview"
+                style="@style/Widget.OpenCfMoto.Button.Tonal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/main_local_preview" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

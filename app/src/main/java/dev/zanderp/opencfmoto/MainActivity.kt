@@ -268,6 +268,59 @@ class MainActivity : AppCompatActivity() {
             p == Phase.MIRRORING
     }
 
+    private fun startLocalPreview() {
+        val phase = ConnectionState.phase
+        if (phase.busy || phase == Phase.STREAMING || phase == Phase.MIRRORING) {
+            log("local preview ignored — stop the current session first")
+            return
+        }
+        if (DependencyPrompt.showForConnect(this, forScan = false)) return
+        if (!WifiGate.ensureEnabledOrPrompt(this)) return
+        if (!ensureNearbyBtForAaConnect()) return
+
+        val savedQr = BikeMemory.lastQr(this)
+        tearDownForModeSwitch(clearMap = true, clearMirror = true)
+        AppSettings.applyToHolder(this)
+        if (savedQr != null) applyProfile(savedQr)
+
+        val previewLabel = getString(R.string.main_local_preview_detail)
+        ConnectionState.set(Phase.STARTING_AA, previewLabel)
+        log("→ starting local Android Auto preview (no bike Wi-Fi / PXC)")
+        AaVideoBridge.onSteadyVideo = {
+            AaVideoBridge.onSteadyVideo = null
+            ConnectionState.set(Phase.AA_VIDEO_LIVE, previewLabel)
+            LogBus.log("→ local Android Auto video is live")
+        }
+        AndroidAutoService.start(this)
+        logView.postDelayed({
+            try {
+                dev.zanderp.opencfmoto.aa.AaSelfMode.trigger(this, log = ::log)
+            } catch (e: Exception) {
+                log("local Android Auto trigger failed: $e")
+            }
+        }, 900)
+        logView.postDelayed({
+            if (ConnectionState.phase != Phase.STARTING_AA ||
+                AaVideoBridge.aaSessionLive || AaVideoBridge.aaDecoding
+            ) return@postDelayed
+            log("[AA] no local video yet — retrying self-mode")
+            try {
+                dev.zanderp.opencfmoto.aa.AaSelfMode.trigger(this, log = ::log)
+            } catch (e: Exception) {
+                log("local Android Auto retry failed: $e")
+            }
+        }, 4_500)
+        logView.postDelayed({
+            if (ConnectionState.phase != Phase.STARTING_AA ||
+                AaVideoBridge.aaSessionLive || AaVideoBridge.aaDecoding
+            ) return@postDelayed
+            AaVideoBridge.onSteadyVideo = null
+            AndroidAutoService.stop(this)
+            ConnectionState.set(Phase.STOPPED, getString(R.string.main_local_preview_failed))
+            Toast.makeText(this, R.string.main_local_preview_failed, Toast.LENGTH_LONG).show()
+        }, 18_000)
+    }
+
     /**
      * Block AA Connect until Nearby (API 31+) is granted and Bluetooth is on — otherwise HUR
      * never runs and Activity/Receiver alone often leave SoftAP up with no AA on the phone.
@@ -450,6 +503,11 @@ class MainActivity : AppCompatActivity() {
             iconGravity = MaterialButton.ICON_GRAVITY_TEXT_START
             maxLines = 1
         }
+        (findViewById<View>(R.id.btn_local_preview) as? MaterialButton)?.apply {
+            setIconResource(R.drawable.ic_cast)
+            iconGravity = MaterialButton.ICON_GRAVITY_TEXT_START
+            maxLines = 1
+        }
         (findViewById<View>(R.id.btn_controls) as? MaterialButton)?.apply {
             setIconResource(R.drawable.ic_devices)
             iconGravity = MaterialButton.ICON_GRAVITY_TEXT_START
@@ -548,6 +606,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btn_aa_start).setOnClickListener { startAaScan() }
+        findViewById<View>(R.id.btn_local_preview).setOnClickListener { startLocalPreview() }
 
         findViewById<Button>(R.id.btn_mirror_start).setOnClickListener { onMirrorPressed() }
         findViewById<View>(R.id.btn_gpx).setOnClickListener { onMapPressed() }
@@ -920,6 +979,7 @@ class MainActivity : AppCompatActivity() {
         connectBtn.isEnabled = true
         // Scan only when not mid-flight.
         setEnabled(R.id.btn_aa_start, !busy)
+        setEnabled(R.id.btn_local_preview, !busy && !live)
         // Map / Mirror stay available while live so the rider can switch dash content.
         setEnabled(R.id.btn_mirror_start, !busy || live)
         setEnabled(R.id.btn_gpx, !busy || live)
